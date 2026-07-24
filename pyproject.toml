@@ -20,6 +20,10 @@ test = [
     "pytest-asyncio>=0.21.0",
     "httpx>=0.24.0",
 ]
+dev = [
+    "ruff>=0.1.0",
+    "pip-audit>=2.0.0",
+]
 
 [tool.setuptools.packages.find]
 include = ["app*"]
@@ -27,3 +31,39 @@ include = ["app*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+src = ["app", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+    "I",
+    "UP",
+    "B",
+    "SIM",
+    "C9",
+]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.bumpversion]
+current_version = "0.1.0"
+commit = true
+tag = true
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "main.py"
+search = 'version="{current_version}"'
+replace = 'version="{new_version}"'

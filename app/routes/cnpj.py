@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.models.cnpj import CnpjRequest, CnpjResponse
-from app.services.cnpj_service import validate_cnpj, format_cnpj
+from app.services.cnpj_service import format_cnpj, validate_cnpj
 
 router = APIRouter(prefix="/cnpj", tags=["CNPJ"])
 
