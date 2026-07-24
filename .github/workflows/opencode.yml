@@ -23,7 +23,8 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 1
-          persist-credentials: true
+          persist-credentials: false
+          token: ${{ secrets.OPENCODE_PAT_TOKEN }}
 
       - name: Configure git identity
         run: |
@@ -35,8 +36,7 @@ jobs:
         uses: anomalyco/opencode/github@latest
         env:
           MGC_PROSA_API_KEY: ${{ secrets.MGC_PROSA_API_KEY }}
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.OPENCODE_PAT_TOKEN }}
         with:
           model: ${{ vars.OPENCODE_MODEL }}
           use_github_token: true
