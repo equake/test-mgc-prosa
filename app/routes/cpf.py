@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.models.cpf import CpfRequest, CpfResponse
-from app.services.cpf_service import validate_cpf, format_cpf
+from app.services.cpf_service import format_cpf, validate_cpf
 
 router = APIRouter(prefix="/cpf", tags=["CPF"])
 

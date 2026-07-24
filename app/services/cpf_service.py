@@ -25,6 +25,6 @@ def _is_all_same_digits(value: str) -> bool:
 
 
 def _calculate_digit(base: str, weights: list) -> int:
-    total = sum(int(d) * w for d, w in zip(base, weights))
+    total = sum(int(d) * w for d, w in zip(base, weights, strict=True))
     remainder = total % 11
     return 0 if remainder < 2 else 11 - remainder
