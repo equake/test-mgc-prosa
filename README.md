@@ -141,3 +141,23 @@ test-mgc/
 - [Pydantic](https://docs.pydantic.dev/) — validação de dados
 - [Uvicorn](https://www.uvicorn.org/) — servidor ASGI
 - [pytest](https://docs.pytest.org/) — testes
+
+## Integração com OpenCode (GitHub Actions)
+
+Este repositório usa o bot [OpenCode](https://opencode.ai/) via GitHub Actions. Para acionar o bot em qualquer issue ou PR, comente `/oc` (ou `/opencode`) seguido da instrução desejada.
+
+### Manejos necessários para criar Pull Requests via comentário
+
+A integração passa por três adaptações necessárias para o cenário atual:
+
+1. **Token `GITHUB_TOKEN` do runner nao cria PRs.** O token padrao do GitHub Actions nao tem permissao para chamar `POST /repos/{owner}/{repo}/pulls` em eventos de `issue_comment`, independentemente das permissoes declaradas em `permissions:`. **Solucao adotada:** usar um Personal Access Token (PAT) com escopo `repo` armazenado como secret `OPENCODE_PAT_TOKEN`. O PAT e passado para o checkout e para o step do opencode, permitindo que o bot abra PRs.
+
+2. **Formato do OIDC mudou em 2026-07-15.** O OpenCode consome o OIDC token do GitHub (`id-token: write`) para se autenticar com o GitHub App oficial. O novo formato do token (`repo:owner@id/repo@id:ref:...`) quebra o parser do OpenCode, gerando o erro `Failed to parse JSON → "p.rest"` que mascara a causa real. Issue upstream: [anomalyco/opencode#37823](https://github.com/anomalyco/opencode/issues/37823). PR com correcao: [anomalyco/opencode#37889](https://github.com/anomalyco/opencode/pull/37889). **Workaround adotado ate o merge:** o step `Configure git identity` configura manualmente o autor do commit, contornando a dependencia do OIDC para commits e pushes.
+
+3. **Loop infinito de auto-trigger.** Como o PAT credita os comentarios do opencode ao proprio usuario (e nao a um bot), o filtro `github.event.sender.type != 'Bot'` nao pega as respostas automaticas do opencode. **Solucao adotada:** filtro adicional por conteudo - `!contains(github.event.comment.body, 'opencode.ai/s/')` - que detecta o link de sessao que so o opencode inclui nas respostas e ignora esses comentarios.
+
+### Configuracao local
+
+- Variavel `OPENCODE_MODEL` (repository variable) com o modelo a ser usado (ex.: `anthropic/claude-sonnet-4-20250514`).
+- Secret `MGC_PROSA_API_KEY` (ou outro provider) com a chave de API do LLM.
+- Secret `OPENCODE_PAT_TOKEN` com o Personal Access Token usado para checkout e para `GITHUB_TOKEN` no step do opencode.
