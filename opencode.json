@@ -6,7 +6,8 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "MGC Prosa",
       "options": {
-        "baseURL": "https://api.inferencia.llm.mglu.io/v1"
+        "baseURL": "https://api.inferencia.llm.mglu.io/v1",
+        "apiKey": "${MGC_API_KEY}"
       },
       "models": {
         "qwen-qwen3.6-27b": {
