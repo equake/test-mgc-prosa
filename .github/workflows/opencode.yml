@@ -16,21 +16,18 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-      contents: write
-      pull-requests: write
-      issues: write
+      contents: read
+      pull-requests: read
+      issues: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
-          fetch-depth: 0
           persist-credentials: false
 
       - name: Run opencode
-        uses: anomalyco/opencode/github@v1.18.4
+        uses: anomalyco/opencode/github@latest
         env:
-          MGC_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MGC_PROSA_API_KEY: ${{ secrets.MGC_PROSA_API_KEY }}
         with:
           model: ${{ vars.OPENCODE_MODEL }}
-          use_github_token: true
