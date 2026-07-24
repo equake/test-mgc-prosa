@@ -25,13 +25,12 @@ jobs:
         run: pytest tests/ -v
 
   publish:
-    name: Publicar pacote no GitHub
+    name: Publicar pacote no TestPyPI
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -41,16 +40,12 @@ jobs:
           python-version: "3.12"
 
       - name: Instalar build tools
-        run: pip install build twine
+        run: pip install build
 
       - name: Construir pacote
         run: python -m build
 
-      - name: Publicar no GitHub Packages
-        env:
-          TWINE_USERNAME: ${{ github.actor }}
-          TWINE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          twine upload \
-            --repository-url https://maven.pkg.github.com/${{ github.repository }} \
-            dist/*
+      - name: Publicar no TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
