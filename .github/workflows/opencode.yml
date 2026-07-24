@@ -13,7 +13,6 @@ jobs:
       contains(github.event.comment.body, '/opencode')
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: write
       pull-requests: write
       issues: write
@@ -34,6 +33,7 @@ jobs:
         uses: anomalyco/opencode/github@latest
         env:
           MGC_PROSA_API_KEY: ${{ secrets.MGC_PROSA_API_KEY }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           model: ${{ vars.OPENCODE_MODEL }}
