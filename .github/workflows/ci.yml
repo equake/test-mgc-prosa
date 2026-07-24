@@ -46,12 +46,10 @@ jobs:
       - name: Construir pacote
         run: python -m build
 
-      - name: Configurar credenciais
-        run: |
-          mkdir -p ~/.config/pip
-          echo -e "[pypi]\nusername = ${{ github.actor }}\npassword = ${{ secrets.GITHUB_TOKEN }}\n" > ~/.config/pip/.netrc
-
       - name: Publicar no GitHub Packages
+        env:
+          TWINE_USERNAME: ${{ github.actor }}
+          TWINE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: |
           twine upload \
             --repository-url https://maven.pkg.github.com/${{ github.repository }} \
