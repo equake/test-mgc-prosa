@@ -30,4 +30,4 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: mgc-prosa/qwen-qwen3.6-27b
+          model: ${{ vars.OPENCODE_MODEL }}
