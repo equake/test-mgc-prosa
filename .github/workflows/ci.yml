@@ -25,12 +25,12 @@ jobs:
         run: pytest tests/ -v
 
   publish:
-    name: Publicar pacote no TestPyPI
+    name: Criar release no GitHub
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -45,7 +45,12 @@ jobs:
       - name: Construir pacote
         run: python -m build
 
-      - name: Publicar no TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Criar release
+        uses: softprops/action-gh-release@v2
         with:
-          repository-url: https://test.pypi.org/legacy/
+          tag_name: "v${{ github.run_number }}"
+          name: "Release ${{ github.run_number }}"
+          generate_release_notes: true
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
