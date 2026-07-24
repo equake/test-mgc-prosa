@@ -50,8 +50,4 @@ jobs:
         env:
           TWINE_USERNAME: ${{ github.actor }}
           TWINE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          twine upload \
-            --repository-url https://maven.pkg.github.com/${{ github.repository }} \
-            --skip-existing \
-            dist/*
+        run: twine upload --repository-url https://maven.pkg.github.com/${{ github.repository }} dist/*
