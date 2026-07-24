@@ -17,7 +17,8 @@ jobs:
     if: |
       (contains(github.event.comment.body, '/oc') ||
       contains(github.event.comment.body, '/opencode')) &&
-      github.event.sender.type != 'Bot'
+      github.event.sender.type != 'Bot' &&
+      !contains(github.event.comment.body, 'opencode.ai/s/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
