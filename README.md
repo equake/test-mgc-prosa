@@ -1,6 +1,7 @@
-# API Validação de CNPJ
 
-API REST para validação de CNPJ, construída com FastAPI. Validação offline utilizando o algoritmo de dígitos verificadores da Receita Federal.
+# API Validação de CNPJ e CPF
+
+API REST para validação de CNPJ e CPF, construída com FastAPI. Validação offline utilizando o algoritmo de dígitos verificadores da Receita Federal.
 
 ## Requisitos
 
@@ -54,12 +55,39 @@ O campo `cnpj` aceita:
 }
 ```
 
-**Códigos de status:**
+### POST /cpf/validate
+
+Valida um CPF e retorna se é válido ou não.
+
+**Request:**
+
+```json
+{
+  "cpf": "123.456.789-09"
+}
+```
+
+O campo `cpf` aceita:
+- Dígitos puros: `12345678909`
+- Com máscara: `123.456.789-09`
+- Com espaços: `123 456 789 09`
+
+**Response (200):**
+
+```json
+{
+  "valid": true,
+  "cpf": "123.456.789-09",
+  "message": "CPF válido"
+}
+```
+
+### Códigos de status
 
 | Código | Descrição |
 |---|---|
 | `200` | Processado com sucesso (válido ou inválido) |
-| `422` |Payload inválido (campo ausente ou CNPJ com menos de 14 dígitos) |
+| `422` | Payload inválido (campo ausente ou tamanho incorreto) |
 | `405` | Método HTTP não permitido |
 
 ## Testes
@@ -71,9 +99,15 @@ pytest tests/ -v
 ## Exemplo com cURL
 
 ```bash
+# Validar CNPJ
 curl -X POST http://localhost:8000/cnpj/validate \
   -H "Content-Type: application/json" \
   -d '{"cnpj": "11.222.333/0001-81"}'
+
+# Validar CPF
+curl -X POST http://localhost:8000/cpf/validate \
+  -H "Content-Type: application/json" \
+  -d '{"cpf": "123.456.789-09"}'
 ```
 
 ## Estrutura do Projeto
@@ -84,15 +118,21 @@ test-mgc/
 ├── requirements.txt         # Dependências
 ├── app/
 │   ├── models/
-│   │   └── cnpj.py          # Schemas Pydantic (request/response)
+│   │   ├── cnpj.py          # Schemas Pydantic (CNPJ)
+│   │   └── cpf.py           # Schemas Pydantic (CPF)
 │   ├── services/
-│   │   └── cnpj_service.py  # Algoritmo de validação do CNPJ
+│   │   ├── cnpj_service.py  # Algoritmo de validação do CNPJ
+│   │   └── cpf_service.py   # Algoritmo de validação do CPF
 │   └── routes/
-│       └── cnpj.py          # Endpoint POST /cnpj/validate
+│       ├── cnpj.py          # Endpoint POST /cnpj/validate
+│       └── cpf.py           # Endpoint POST /cpf/validate
 └── tests/
-    ├── test_cnpj_service.py # Testes unitários do algoritmo
-    ├── test_cnpj_models.py  # Testes dos schemas Pydantic
-    └── test_cnpj_routes.py  # Testes de integração da API
+    ├── test_cnpj_service.py # Testes unitários do algoritmo CNPJ
+    ├── test_cnpj_models.py  # Testes dos schemas Pydantic CNPJ
+    ├── test_cnpj_routes.py  # Testes de integração da API CNPJ
+    ├── test_cpf_service.py  # Testes unitários do algoritmo CPF
+    ├── test_cpf_models.py   # Testes dos schemas Pydantic CPF
+    └── test_cpf_routes.py   # Testes de integração da API CPF
 ```
 
 ## Tecnologias
