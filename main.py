@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 
 from app.routes.cnpj import router as cnpj_router
+from app.routes.cpf import router as cpf_router
 
-app = FastAPI(title="API Validação CNPJ", version="1.0.0")
+app = FastAPI(title="API Validação CNPJ e CPF", version="1.0.0")
 
 app.include_router(cnpj_router)
+app.include_router(cpf_router)
