@@ -30,8 +30,9 @@ jobs:
         uses: anomalyco/opencode/github@v1.18.4
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           MGC_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           model: ${{ vars.OPENCODE_MODEL }}
           use_github_token: true
